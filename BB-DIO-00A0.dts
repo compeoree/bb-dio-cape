@@ -1,0 +1,190 @@
+/*
+* Copyright (C) 2014 Louis McCarthy
+* Licenced under Creative Commons Attribution 4.0 International License.
+*
+* BB-DIO Cape Driver
+*
+*/
+/dts-v1/;
+/plugin/;
+
+/ {
+	compatible = "ti,beaglebone", "ti,beaglebone-black";
+
+	part-number = "BBDIO";
+	version = "00A0";
+
+	/* state the resources this cape uses */
+	exclusive-use =
+		/* header pin assignments */
+		"P8.4",    /* Digital Output 0 gpio1_7 */
+		"P8.3",    /* Digital Output 1 gpio1_6 */
+		"P8.6",    /* Digital Output 2 gpio1_3 */
+		"P8.8",    /* Digital Output 3 gpio2_3 */
+		"P8.10",   /* Digital Output 4 gpio2_4 */
+		"P8.9",    /* Digital Output 5 gpio2_5 */
+		"P8.7",    /* Digital Output 6 gpio2_2 */
+		"P8.5",    /* Digital Output 7 gpio1_2 */
+		"P8.18",   /* Digital Output 8 gpio2_1 */
+		"P8.22",   /* Digital Output 9 gpio1_5 */
+		"P8.24",   /* Digital Output 10 gpio1_1 */
+		"P8.26",   /* Digital Output 11 gpio1_29 */
+		"P8.25",   /* Digital Output 12 gpio1_0 */
+		"P8.23",   /* Digital Output 13 gpio1_4 */
+		"P9.23",   /* Digital Output 14 gpio1_17 */
+		"P9.42",   /* Digital Output 15 gpio0_7 */
+		
+		"P9.18",   /* Digital Input 0 gpio0_4 */
+		"P9.16",   /* Digital Input 1 gpio1_19 */
+		"P9.14",   /* Digital Input 2 gpio1_18 */
+		"P9.12",   /* Digital Input 3 gpio1_28 */
+		"P9.11",   /* Digital Input 4 gpio0_30 */
+		"P9.13",   /* Digital Input 5 gpio0_31 */
+		"P9.15",   /* Digital Input 6 gpio1_16 */
+		"P9.17",   /* Digital Input 7 gpio0_5 */
+		"P9.25",   /* Digital Input 8 gpio3_21 */
+		"P9.27",   /* Digital Input 9 gpio3_19 */
+		"P9.31",   /* Digital Input 10 gpio3_14 */
+		"P9.29",   /* Digital Input 11 gpio3_15 */
+		"P9.30",   /* Digital Input 12 gpio3_16 */
+		"P9.41",   /* Digital Input 13 gpio0_20 */
+		"P9.28",   /* Digital Input 14 gpio3_17 */
+		
+		"P9.24",	/* uart1_txd */
+		"P9.26",	/* uart1_rxd */
+		"P9.21",	/* uart2_txd */
+		"P9.22",	/* uart2_rxd */
+
+		/* the hardware IP uses */
+		"uart1",
+		"uart2";
+
+	fragment@0 {
+		target = <&am33xx_pinmux>;
+		__overlay__ {
+			/* define inputs */
+			digital_input_pins: pinmux_di_pins {
+				pinctrl-single,pins = <
+					/* P9 connector on the bone */
+					0x070 0x37 /* 11 UART4_RXD  gpmc_wait0.gpio0[30] w/pullup   */
+					0x078 0x37 /* 12 GPIO1_28   gpmc_be1n.gpio1[28] w/pullup    */
+					0x074 0x37 /* 13 UART4_TXD  gpmc_wpn.gpio0[31] w/pullup     */
+					0x048 0x37 /* 14 EHRPWM1A   gpmc_a2.gpio1[18] w/pullup      */
+					0x040 0x37 /* 15 GPIO1_16   gpmc_a0.gpio1[16]  w/pullup     */
+					0x04C 0x37 /* 16 EHRPWM1B   gpmc_a3.gpio1[19]  w/pullup     */
+					0x15c 0x37 /* 17 I2C1_SCL   spi0_cs0.gpio0[5]  w/pullup     */
+					0x158 0x37 /* 18 I2C1_SDA   spi0_d1.gpio0[4]  w/pullup     */
+					/* 9-19 and 20 are i2c2 */
+					/* 9-21 and 22 are uart2 */
+					/* 9-23 is an output */
+					/* 9-24 is uart1 txd */
+					0x1AC 0x37 /* 25 GPIO3_21   mcasp0_ahclkx.gpio3[21] w/pullup */
+					/* 9-26 is uart1 rxd */
+					0x1A4 0x37 /* 27 GPIO3_19   mcasp0_fsr.gpio3[19] w/pullup   */
+					0x19C 0x37 /* 28 SPI1_CS0   mcasp0_ahclkr.gpio3[17] w/pullup */
+					0x194 0x37 /* 29 SPI1_D0    mcasp0_fsx.gpio3[15], w/pullup */
+					0x198 0x37 /* 30 SPI1_D1    mcasp0_axr0.gpio3[16] w/pullup  */
+					0x190 0x37 /* 31 SPI1_SCLK  mcasp0_aclkx.gpio3[14] w/pullup */
+					/* 9-32 to 40 are ADC related pins */
+					0x1B4 0x37 /* 41 CLKOUT2    xdma_event_intr1.gpio0[20] w/pullup */
+					/* 9-42 is an output */
+				>;
+			};
+			
+			/* define outputs */
+			digital_output_pins: pinmux_do_pins {
+				pinctrl-single,pins = <
+					/* P8 connector */
+					0x018 0x07 /*  3 GPIO1_6    gpmc_ad6.gpio1[6]      */
+					0x01C 0x07 /*  4 GPIO1_7    gpmc_ad7.gpio1[7]      */
+					0x008 0x07 /*  5 GPIO1_2    gpmc_ad2.gpio1[2]      */
+					0x00C 0x07 /*  6 GPIO1_3    gpmc_ad3.gpio1[3]      */
+					0x090 0x07 /*  7 TIMER4     gpmc_advn_ale.gpio2[2] */
+					0x094 0x07 /*  8 TIMER7     gpmc_oen_ren.gpio2[3]  */
+					0x09C 0x07 /*  9 TIMER5     gpmc_ben0_cle.gpio2[5] */
+					0x098 0x07 /* 10 TIMER6     gpmc_wen.gpio2[4]      */
+					/* mmc1 0x034 0x07    11 GPIO1_13   gpmc_ad13.gpio1[13]    */
+					/* mmc1 0x030 0x07    12 GPIO1_12   gpmc_ad12.gpio1[12]    */
+					/* mmc1 0x024 0x07    13 EHRPWM2B   gpmc_ad9 .gpio0[23]    */
+					/* mmc1 0x028 0x07    14 GPIO0_26   gpmc_ad10.gpio0[26]    */
+					/* mmc1 0x03C 0x07    15 GPIO1_15   gpmc_ad15.gpio1[15]    */
+					/* mmc1 0x038 0x07    16 GPIO1_14   gpmc_ad14.gpio1[14]    */
+					/* mmc1 0x02C 0x07    17 GPIO0_27   gpmc_ad11.gpio0[27]    */
+					0x08C 0x07 /* 18 GPIO2_1    gpmc_clk .gpio2[1]     */
+					/* mmc1 0x020 0x07    19 EHRPWM2A   gpmc_ad8 .gpio0[22]    */
+					/* mmc1 0x084 0x07    20 GPIO1_31   gpmc_csn2.gpio1[31]    */
+					/* mmc1 0x080 0x07    21 GPIO1_30   gpmc_csn1.gpio1[30]    */
+					0x014 0x07 /* 22 GPIO1_5    gpmc_ad5 .gpio1[5]     */
+					0x010 0x07 /* 23 GPIO1_4    gpmc_ad4 .gpio1[4]     */
+					0x004 0x07 /* 24 GPIO1_1    gpmc_ad1 .gpio1[1]     */
+					0x000 0x07 /* 25 GPIO1_0    gpmc_ad0 .gpio1[0]     */
+					0x07C 0x07 /* 26 GPIO1_29   gpmc_csn0.gpio1[29]    */
+
+					/* P9 connector */
+					0x044 0x07 /* 23 GPIO1_17   gpmc_a1.gpio1[17]      */
+					0x164 0x07 /* 42 GPIO0_7    eCAP0_in_PWM0_out.gpio0[7]*/
+				>;
+			};
+			
+			/* define outputs */
+			uart_pins: pinmux_uart_pins {
+				pinctrl-single,pins = <
+					0x184 0x20 /* P9-24 uart1_txd | MODE0 */
+					0x180 0x20 /* P9-26 uart1_rxd | MODE0 */
+					0x150 0x21 /* P9-22 uart2_rxd | MODE1 */
+					0x154 0x01 /* P9-21 uart2_txd | MODE1 */
+				>;
+			};
+		};
+	};
+
+	fragment@1 {
+		target = <&i2c2>;
+		__overlay__ {
+		    #address-cells = <1>;
+		    #size-cells = <0>;
+			/* pinctrl-names = "default"; */
+			/* pinctrl-0 = <&block_name_pins>; */
+			/* status = "okay"; */
+			/* clock-frequency = <100000>; */
+
+		    /* 2ch - 12 bit DAC */
+		    dac7678@48 {
+			    compatible = "ti,dac7678";
+			    reg = <0x48>;
+		    };
+		};
+	};
+
+	fragment@2 {
+		target = <&ocp>;
+		__overlay__ {
+
+			tester_pinmux_helper {
+				compatible = "bone-pinmux-helper";
+				status = "okay";
+
+				pinctrl-names = "default"; /*, "gpio", "input", "output"; */
+				pinctrl-0 = <&digital_input_pins>;
+				pinctrl-1 = <&digital_output_pins>;
+				pinctrl-2 = <&uart_pins>;
+			};
+		};
+	};
+	
+	fragment@3 {
+		target = <&uart2>;	/* really uart1 */
+		__overlay__ {
+			/* please note that the pinconfig is done by the pinmux helper */
+			status = "okay";
+		};
+	};
+
+	fragment@4 {
+		target = <&uart3>;	/* really uart2 */
+		__overlay__ {
+			/* please note that the pinconfig is done by the pinmux helper */
+			status = "okay";
+		};
+	};
+};
